@@ -1,0 +1,319 @@
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+struct Node {
+    double data;
+    Node* next;
+    
+    Node(double d) : data(d), next(nullptr) {}
+};
+
+class LinkedList {
+private:
+    Node* head;
+public:
+    LinkedList() : head(nullptr) {}
+    
+    void append(double data) {
+        if (!head) {
+            head = new Node(data);
+            return;
+        }
+        Node* current = head;
+        while (current->next) {
+            current = current->next;
+        }
+        current->next = new Node(data);
+    }
+    
+    double getOperand(int index) {
+        Node* current = head;
+        int i = 0;
+        while (current && i < index) {
+            current = current->next;
+            ++i;
+        }
+        if (!current) {
+            return NAN;
+        }
+        return current->data;
+    }
+    
+    void clear() {
+        while (head) {
+            Node* temp = head;
+            head = head->next;
+            delete temp;
+        }
+    }
+};
+
+enum Operation {
+    ADD,
+    SUBTRACT,
+    MULTIPLY,
+    DIVIDE,
+    SINE,
+    COSINE,
+    TANGENT,
+    LOGARITHM,
+    EXPONENT,
+    SQUARE_ROOT,
+    FACTORIAL,
+    ABSOLUTE_VALUE,
+    ARCSINE,
+    ARCCOSINE,
+    ARCTANGENT,
+    SINH,
+    COSH,
+    TANH,
+    ROUND,
+    FLOOR,
+    CEIL
+};
+
+void performOperation(LinkedList& list, Operation op) {
+    double operand1 = list.getOperand(0);
+    double operand2 = list.getOperand(1);
+    list.clear();
+    switch (op) {
+        case ADD:
+            list.append(operand1 + operand2);
+            break;
+        case SUBTRACT:
+            list.append(operand1 - operand2);
+            break;
+        case MULTIPLY:
+            list.append(operand1 * operand2);
+            break;
+        case DIVIDE:
+            if (operand2 != 0)
+                list.append(operand1 / operand2);
+            else
+                list.append(NAN);
+            break;
+        case SINE:
+            list.append(sin(operand1));
+            break;
+        case COSINE:
+            list.append(cos(operand1));
+            break;
+        case TANGENT:
+            list.append(tan(operand1));
+            break;
+        case LOGARITHM:
+            if (operand1 > 0)
+                list.append(log(operand1));
+            else
+                list.append(NAN);
+            break;
+        case EXPONENT:
+            list.append(pow(operand1, operand2));
+            break;
+        case SQUARE_ROOT:
+            if (operand1 >= 0)
+                list.append(sqrt(operand1));
+            else
+                list.append(NAN);
+            break;
+        case FACTORIAL:
+            if (operand1 >= 0 && floor(operand1) == operand1) {
+                double result = 1;
+                for (int i = 2; i <= operand1; ++i)
+                    result *= i;
+                list.append(result);
+            } else
+                list.append(NAN);
+            break;
+        case ABSOLUTE_VALUE:
+            list.append(fabs(operand1));
+            break;
+        case ARCSINE:
+            list.append(asin(operand1));
+            break;
+        case ARCCOSINE:
+            list.append(acos(operand1));
+            break;
+        case ARCTANGENT:
+            list.append(atan(operand1));
+            break;
+        case SINH:
+            list.append(sinh(operand1));
+            break;
+        case COSH:
+            list.append(cosh(operand1));
+            break;
+        case TANH:
+            list.append(tanh(operand1));
+            break;
+        case ROUND:
+            list.append(round(operand1));
+            break;
+        case FLOOR:
+            list.append(floor(operand1));
+            break;
+        case CEIL:
+            list.append(ceil(operand1));
+            break;
+        default:
+            list.append(NAN);
+            break;
+    }
+}
+
+int main() {
+    LinkedList list;
+    char operation;
+    
+    cout << "Enter operation (+, -, *, /, s/S for sin, c/C for cos, t/T for tan, l/L for log, e/E for exponent, r/R for square root, f/F for factorial, a/A for absolute value, i/I for arcsin, o/O for arccos, n/N for arctan, h/H for sinh, j/J for cosh, u/U for tanh, d/D for round, g/G for floor, k/K for ceil): ";
+    cin >> operation;
+    
+    switch (operation) {
+        case '+':
+        case '-':
+        case '*':
+        case '/':
+        case 'e':
+        case 'E':
+            cout << "Enter  2    operands: "<<endl;
+             
+            double operand1, operand2;
+            cin >> operand1 >> operand2;
+            list.append(operand1);
+            list.append(operand2);
+            break;
+        case 's':
+        case 'S':
+        case 'c':
+        case 'C':
+        case 't':
+        case 'T':
+        case 'l':
+        case 'L':
+        case 'r':
+        case 'R':
+        case 'f':
+        case 'F':
+        case 'a':
+        case 'A':
+        case 'i':
+        case 'I':
+        case 'o':
+        case 'O':
+        case 'n':
+        case 'N':
+        case 'h':
+        case 'H':
+        case 'j':
+        case 'J':
+        case 'u':
+        case 'U':
+        case 'd':
+        case 'D':
+        case 'g':
+        case 'G':
+        case 'k':
+        case 'K':
+            cout << "Enter one operand: ";
+            double operand;
+            cin >> operand;
+            list.append(operand);
+            break;
+        default:
+            return 1;
+    }
+    
+    Operation op;
+    switch (operation) {
+        case '+':
+            op = ADD;
+            break;
+        case '-':
+            op = SUBTRACT;
+            break;
+        case '*':
+            op = MULTIPLY;
+            break;
+        case '/':
+            op = DIVIDE;
+            break;
+        case 's':
+        case 'S':
+            op = SINE;
+            break;
+        case 'c':
+        case 'C':
+            op = COSINE;
+            break;
+        case 't':
+        case 'T':
+            op = TANGENT;
+            break;
+        case 'l':
+        case 'L':
+            op = LOGARITHM;
+            break;
+        case 'e':
+        case 'E':
+            op = EXPONENT;
+            break;
+        case 'r':
+        case 'R':
+            op = SQUARE_ROOT;
+            break;
+        case 'f':
+        case 'F':
+            op = FACTORIAL;
+            break;
+        case 'a':
+        case 'A':
+            op = ABSOLUTE_VALUE;
+            break;
+        case 'i':
+        case 'I':
+            op = ARCSINE;
+            break;
+        case 'o':
+        case 'O':
+            op = ARCCOSINE;
+            break;
+        case 'n':
+        case 'N':
+            op = ARCTANGENT;
+            break;
+        case 'h':
+        case 'H':
+            op = SINH;
+            break;
+        case 'j':
+        case 'J':
+            op = COSH;
+            break;
+        case 'u':
+        case 'U':
+            op = TANH;
+            break;
+        case 'd':
+        case 'D':
+            op = ROUND;
+            break;
+        case 'g':
+        case 'G':
+            op = FLOOR;
+            break;
+        case 'k':
+        case 'K':
+            op = CEIL;
+            break;
+        default:
+            return 1;
+    }
+    
+    performOperation(list, op);
+    
+    cout << "Result: " << list.getOperand(0) << endl;
+    
+    return 0;
+}
